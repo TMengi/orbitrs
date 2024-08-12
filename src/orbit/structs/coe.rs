@@ -1,5 +1,5 @@
+use crate::orbit::constants;
 use crate::orbit::traits::*;
-use crate::orbit::FromBuilder;
 
 pub use coe_canonical::COE;
 mod coe_canonical {
@@ -15,7 +15,25 @@ mod coe_canonical {
         pub true_anomaly: f64,
     }
 
-    impl FromBuilder for COE {}
+    impl COE {
+        pub fn new(
+            semi_major_axis: f64,
+            eccentricity: f64,
+            inclination: f64,
+            arg_peri: f64,
+            raan: f64,
+            true_anomaly: f64,
+        ) -> Self {
+            Self {
+                semi_major_axis,
+                eccentricity,
+                inclination,
+                arg_peri,
+                raan,
+                true_anomaly,
+            }
+        }
+    }
 
     impl Sized for COE {
         fn semi_major_axis(&self) -> f64 {
@@ -24,6 +42,15 @@ mod coe_canonical {
 
         fn semi_latus_rectum(&self) -> f64 {
             self.semi_major_axis * (1. - self.eccentricity.powi(2))
+        }
+
+        fn period(&self) -> f64 {
+            let semi_major_axis = self.semi_major_axis();
+            if semi_major_axis > 0. {
+                (constants::MU_EARTH / self.semi_major_axis().powi(3)).sqrt()
+            } else {
+                0.
+            }
         }
     }
 
@@ -107,6 +134,15 @@ mod coe_slr {
         fn semi_latus_rectum(&self) -> f64 {
             self.semi_latus_rectum
         }
+
+        fn period(&self) -> f64 {
+            let semi_major_axis = self.semi_major_axis();
+            if semi_major_axis > 0. {
+                (constants::MU_EARTH / self.semi_major_axis().powi(3)).sqrt()
+            } else {
+                0.
+            }
+        }
     }
 }
 
@@ -133,6 +169,9 @@ mod comparison_tests {
             true_anomaly: 4.,
         };
         assert_eq!(coe_canonical.semi_major_axis(), coe_slr.semi_major_axis());
-        assert_eq!(coe_canonical.semi_latus_rectum(), coe_slr.semi_latus_rectum());
+        assert_eq!(
+            coe_canonical.semi_latus_rectum(),
+            coe_slr.semi_latus_rectum()
+        );
     }
 }

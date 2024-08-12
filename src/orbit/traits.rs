@@ -1,6 +1,7 @@
 pub trait Sized {
     fn semi_major_axis(&self) -> f64;
     fn semi_latus_rectum(&self) -> f64;
+    fn period(&self) -> f64;
 }
 
 pub trait Shaped {
