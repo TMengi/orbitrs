@@ -1,4 +1,4 @@
-use crate::orbit_structs::traits::{Sized, Shaped, Oriented};
+use crate::orbit::traits::{Sized, Shaped, Oriented};
 
 pub struct COE {
     semi_major_axis: f64,

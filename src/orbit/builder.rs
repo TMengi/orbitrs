@@ -1,11 +1,3 @@
-/// Define a single Orbit struct that can be created from a builder
-///
-/// Advantages:
-///     - Nice syntax for creating objects, inherently keyword-based
-///
-/// Disadvantages:
-///     - Underlying data storage has to use the same field representation
-
 #[derive(Debug, PartialEq)]
 pub struct Orbit {
     semi_major_axis: f64,
@@ -16,16 +8,16 @@ impl Orbit {
         Self{semi_major_axis}
     }
 
-    pub fn build() -> OrbitBuilder {
-        OrbitBuilder::new()
+    pub fn build() -> Builder {
+        Builder::new()
     }
 }
 
-pub struct OrbitBuilder {
+pub struct Builder {
     semi_major_axis: Option<f64>,
 }
 
-impl OrbitBuilder {
+impl Builder {
     pub fn new() -> Self {
         Self {
             semi_major_axis: None,
