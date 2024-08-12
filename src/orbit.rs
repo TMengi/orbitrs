@@ -32,7 +32,7 @@ impl OrbitBuilder {
         }
     }
 
-    pub fn semi_major_axis(mut self, sma: f64) -> Self {
+    pub fn semi_major_axis(&mut self, sma: f64) -> &mut Self {
         self.semi_major_axis = Some(sma);
         self
     }
@@ -54,5 +54,10 @@ mod tests {
         let orbit_from_new = Orbit::new(sma_raw);
         let orbit_from_builder = Orbit::build().semi_major_axis(sma_raw).build();
         assert_eq!(orbit_from_new, orbit_from_builder);
+
+        let mut builder = Orbit::build();
+        builder.semi_major_axis(sma_raw);
+        let other_orbit_from_builder = builder.build();
+        assert_eq!(orbit_from_builder, other_orbit_from_builder);
     }
 }
