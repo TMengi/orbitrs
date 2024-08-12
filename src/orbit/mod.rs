@@ -1,9 +1,9 @@
-mod builder;
-pub use builder::Builder;
+mod traits;
+pub use traits::*;
 
 pub mod structs;
+pub use structs::Orbit;
 
-mod traits;
-pub use traits::Oriented;
-pub use traits::Shaped;
-pub use traits::Sized;
+mod builder;
+pub use builder::Builder;
+pub use builder::FromBuilder;
