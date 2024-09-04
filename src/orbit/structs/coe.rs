@@ -1,4 +1,4 @@
-use crate::orbit::constants;
+use crate::constants;
 use crate::orbit::traits::*;
 
 pub use coe_canonical::COE;
