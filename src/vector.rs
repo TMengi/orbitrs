@@ -3,7 +3,34 @@ use std::convert::TryFrom;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Vector3 {
-    elem: [f64; 3],
+    pub elem: [f64; 3],
+}
+
+impl Vector3 {
+    pub fn new(elem: [f64; 3]) -> Self {
+        Self { elem }
+    }
+
+    pub fn norm(&self) -> f64 {
+        vector_ops::vector_2norm(&self.elem)
+    }
+
+    pub fn safe_normalize(&mut self) {
+        vector_ops::safe_normalize(&mut self.elem)
+    }
+
+    pub fn dot(&self, other: &Self) -> f64 {
+        vector_ops::vector_dot(&self.elem, &other.elem)
+    }
+
+    pub fn cross(&self, other: &Self) -> Self {
+        let new_elem = [
+            self.elem[1] * other.elem[2] - self.elem[2] * other.elem[1],
+            self.elem[2] * other.elem[0] - self.elem[0] * other.elem[2],
+            self.elem[0] * other.elem[1] - self.elem[1] * other.elem[0],
+        ];
+        Self { elem: new_elem }
+    }
 }
 
 impl TryFrom<Vec<f64>> for Vector3 {
@@ -17,30 +44,9 @@ impl TryFrom<Vec<f64>> for Vector3 {
     }
 }
 
-impl Vector3 {
-    fn new(elem: [f64; 3]) -> Self {
-        Self { elem }
-    }
-
-    fn norm(&self) -> f64 {
-        vector_ops::vector_2norm(&self.elem)
-    }
-
-    fn safe_normalize(&mut self) {
-        vector_ops::safe_normalize(&mut self.elem)
-    }
-
-    fn dot(&self, other: &Self) -> f64 {
-        vector_ops::vector_dot(&self.elem, &other.elem)
-    }
-
-    fn cross(&self, other: &Self) -> Self {
-        let new_elem = [
-            self.elem[1] * other.elem[2] - self.elem[2] * other.elem[1],
-            self.elem[2] * other.elem[0] - self.elem[0] * other.elem[2],
-            self.elem[0] * other.elem[1] - self.elem[1] * other.elem[0],
-        ];
-        Self { elem: new_elem }
+impl From<[f64; 3]> for Vector3 {
+    fn from(value: [f64; 3]) -> Self {
+        Self::new(value)
     }
 }
 
