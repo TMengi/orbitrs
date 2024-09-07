@@ -1,11 +1,11 @@
 pub fn assert_array_eq(a: &[f64], b: &[f64]) {
-    let mut success = true;
-    for (elem_a, elem_b) in a.iter().zip(b.iter()) {
-        success &= relative_eq!(elem_a, elem_b);
-    }
+    let success = a
+        .iter()
+        .zip(b.iter())
+        .map(|(elem_a, elem_b)| relative_eq!(elem_a, elem_b))
+        .reduce(|acc, e| acc && e)
+        .unwrap_or(false);
     if !success {
-        // let msg = format!("{:?}, {:?}", a, b);
-        // panic!(msg)
         panic!("\tleft  = {:?}\n\tright = {:?}", a, b);
     }
 }
