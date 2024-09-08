@@ -20,8 +20,7 @@ pub fn assert_array_eq_atol(a: &[f64], b: &[f64], atol: f64) {
             .fold(0.0, f64::max);
 
         panic!(
-            "\tleft  = {:?}\n\tright = {:?}\n\tmax adiff = {:.3e}\n\ttol = {:.3e}",
-            a, b, max_diff, atol
+            "\tleft  = {a:?}\n\tright = {b:?}\n\tmax adiff = {max_diff:.3e}\n\ttol = {atol:.3e}",
         );
     }
 }

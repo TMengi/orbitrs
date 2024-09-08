@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![allow(clippy::wildcard_imports)]
 
 #[macro_use]
 extern crate approx;

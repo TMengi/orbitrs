@@ -20,7 +20,7 @@ impl Vector3 {
     }
 
     pub fn safe_normalize(&mut self) {
-        vector_ops::safe_normalize(&mut self.elem)
+        vector_ops::safe_normalize(&mut self.elem);
     }
 
     pub fn dot(&self, other: &Self) -> f64 {
@@ -42,13 +42,13 @@ impl ops::Add<Self> for Vector3 {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let res: Vec<f64> = self
+        let sum: Vec<f64> = self
             .elem
             .iter()
             .zip(rhs.elem.iter())
             .map(|(elem_a, elem_b)| elem_a + elem_b)
             .collect();
-        Self::try_from(res).unwrap()
+        Self::try_from(sum).unwrap()
     }
 }
 
@@ -137,6 +137,5 @@ mod tests {
         let v = Vector3::new([10.0, 20.0, 5.0]);
         let res = v * 2.0;
         testing::assert_array_eq(&res.elem, &[20.0, 40.0, 10.0]);
-
     }
 }

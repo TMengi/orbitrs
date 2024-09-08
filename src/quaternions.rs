@@ -1,4 +1,3 @@
-use std::convert::{TryFrom, TryInto};
 use std::ops;
 
 use crate::vector::Vector3;
@@ -30,7 +29,7 @@ impl Quaternion {
         let scalar = f64::cos(half_angle);
 
         let sin_half_angle = f64::sin(half_angle);
-        let mut unit_axis = axis.clone();
+        let mut unit_axis = *axis;
         vector_ops::safe_normalize(&mut unit_axis);
         let vector = unit_axis.map(|elem| sin_half_angle * elem).into();
         Self { scalar, vector }
@@ -64,19 +63,17 @@ impl Quaternion {
         let vec_cross_quat = vec.cross(&self.vector);
         let term1 = vec_cross_quat.clone() * 2.0 * self.scalar;
         let term2 = vec_cross_quat.cross(&self.vector) * 2.0;
-        let new_vec = vec.clone() + term1 + term2;
-        new_vec
+        vec.clone() + term1 + term2
     }
 
     /// Rotates a vector with an alibi (active) convention.
     ///
     /// This is equivalent to actively rotating the vector in space.
     fn rotated_vec_alibi(&self, vec: &Vector3) -> Vector3 {
-        let quat_cross_vec = self.vector.cross(&vec);
+        let quat_cross_vec = self.vector.cross(vec);
         let term1 = quat_cross_vec.clone() * 2.0 * self.scalar;
         let term2 = self.vector.cross(&quat_cross_vec) * 2.0;
-        let new_vec = vec.clone() + term1 + term2;
-        new_vec
+        vec.clone() + term1 + term2
     }
 }
 
@@ -106,7 +103,6 @@ mod tests {
 
     use crate::constants;
     use crate::testing;
-    use crate::vector;
 
     #[test]
     /// The identity quaternion should have no effect when used to rotate vectors
