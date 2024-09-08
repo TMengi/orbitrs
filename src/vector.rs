@@ -1,5 +1,9 @@
-use crate::vector_ops;
 use std::convert::TryFrom;
+use std::ops;
+
+use crate::vector_ops;
+
+// TODO: How do we make a custom assert_eq behavior?
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Vector3 {
@@ -30,6 +34,36 @@ impl Vector3 {
             self.elem[0] * other.elem[1] - self.elem[1] * other.elem[0],
         ];
         Self { elem: new_elem }
+    }
+}
+
+// TODO: How do I make this not consume the original?
+impl ops::Add<Self> for Vector3 {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let res: Vec<f64> = self
+            .elem
+            .iter()
+            .zip(rhs.elem.iter())
+            .map(|(elem_a, elem_b)| elem_a + elem_b)
+            .collect();
+        Self::try_from(res).unwrap()
+    }
+}
+
+// TODO: How do I make this not consume the original?
+impl<T> ops::Mul<T> for Vector3
+where
+    f64: ops::MulAssign<T>,
+    T: Copy,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        let mut output = self.clone();
+        output.elem.iter_mut().for_each(|elem| *elem *= rhs);
+        output
     }
 }
 
@@ -86,8 +120,23 @@ mod tests {
     fn test_cross() {
         let v1 = Vector3::new([1.0, 2.0, 3.0]);
         let v2 = Vector3::new([4.0, 5.0, 6.0]);
-        let expected_product = Vector3::new([-3.0, 6.0, -3.0]);
         let cross_product = v1.cross(&v2);
-        testing::assert_array_eq(&cross_product.elem, &expected_product.elem);
+        testing::assert_array_eq(&cross_product.elem, &[-3.0, 6.0, -3.0]);
+    }
+
+    #[test]
+    fn test_add_vectors() {
+        let v1 = Vector3::new([1.0, -2.0, -3.0]);
+        let v2 = Vector3::new([4.0, 5.0, 6.0]);
+        let res = v1 + v2;
+        testing::assert_array_eq(&res.elem, &[5.0, 3.0, 3.0]);
+    }
+
+    #[test]
+    fn test_mul_scalar() {
+        let v = Vector3::new([10.0, 20.0, 5.0]);
+        let res = v * 2.0;
+        testing::assert_array_eq(&res.elem, &[20.0, 40.0, 10.0]);
+
     }
 }
